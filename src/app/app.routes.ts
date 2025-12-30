@@ -7,7 +7,7 @@ export const routes: Routes = [
     redirectTo: 'products',
   },
   {
-    path: 'products',
+    path: 'products/:category',
     loadComponent: () => import('./pages/products-grid/products-grid'),
   },
   {
