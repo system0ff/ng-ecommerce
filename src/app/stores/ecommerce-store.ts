@@ -1,4 +1,4 @@
-import { computed } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { Product } from '../models/product';
 import {
   patchState,
@@ -8,10 +8,13 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
+import { produce } from 'immer';
+import { Toaster } from '../services/toaster';
 
 export type EcommerceState = {
   products: Product[];
   category: string;
+  wishlistItems: Product[];
 };
 
 export const EcommerceStore = signalStore(
@@ -980,7 +983,8 @@ export const EcommerceStore = signalStore(
       },
     ],
     category: 'all',
-  }),
+    wishlistItems: [],
+  } as EcommerceState),
   withComputed(({ category, products }) => ({
     filteredProducts: computed(() => {
       if (category() === 'all') return products();
@@ -988,9 +992,19 @@ export const EcommerceStore = signalStore(
       return products().filter((p) => p.category === category().toLowerCase());
     }),
   })),
-  withMethods((store) => ({
+  withMethods((store, toaster = inject(Toaster)) => ({
     setCategory: signalMethod((category: string) => {
       patchState(store, { category });
     }),
+    addToWishlist: (product: Product) => {
+      const updatedWishlistItems = produce(store.wishlistItems(), (draft) => {
+        if (draft.find((p) => p.id === product.id)) {
+          draft.push(product);
+        }
+      });
+
+      patchState(store, { wishlistItems: updatedWishlistItems });
+      toaster.success('Product added to wishlist');
+    },
   }))
 );
