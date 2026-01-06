@@ -15,10 +15,11 @@ import { EcommerceStore } from '../../stores/ecommerce-store';
 
       <button
         matIconButton
+        [class]="isInWishlist() ? '!text-red-500' : '!text-gray-400'"
         class="!absolute z-10 top-3 right-3 w-10 rounded-full !bg-white border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
         (click)="toggleWishlist(product())"
       >
-        <mat-icon>favorite</mat-icon>
+        <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
       </button>
 
       <div class="p-5 flex flex-col flex-1">
@@ -63,7 +64,7 @@ export class ProductCard {
 
   toggleWishlist = (product: Product) => {
     if (this.isInWishlist()) {
-      // remove this
+      this.store.removeFromWishlist(product);
     } else {
       this.store.addToWishlist(product);
     }
