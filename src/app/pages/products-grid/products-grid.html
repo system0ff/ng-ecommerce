@@ -33,10 +33,9 @@
     <div class="responsive-grid">
       @for (product of store.filteredProducts(); track product.id) {
 
-      <app-product-card
-        [product]="product"
-        (addToCartClicked)="addToCart($event)"
-      ></app-product-card>
+      <app-product-card [product]="product" (addToCartClicked)="addToCart($event)">
+        <app-toggle-wishlist-button [product]="product" />
+      </app-product-card>
 
       }
     </div>
