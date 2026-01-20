@@ -31,10 +31,6 @@ export default class ProductsGrid {
   category = input<string>('all');
   categories = signal<string[]>(['all', 'electronics', 'clothing', 'accessories', 'home']);
 
-  addToCart(product: Product) {
-    console.log({ product });
-  }
-
   constructor() {
     this.store.setCategory(this.category);
   }

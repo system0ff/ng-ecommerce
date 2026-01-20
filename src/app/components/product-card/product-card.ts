@@ -35,7 +35,7 @@ import { EcommerceStore } from '../../stores/ecommerce-store';
           <button
             matButton="filled"
             class="flex items-center gap-2"
-            (click)="addToCartClicked.emit(product())"
+            (click)="store.addToCart(product())"
           >
             <mat-icon>shopping_cart</mat-icon>
             Add to Cart
@@ -48,8 +48,5 @@ import { EcommerceStore } from '../../stores/ecommerce-store';
 })
 export class ProductCard {
   product = input.required<Product>();
-
-  addToCartClicked = output<Product>();
-
   store = inject(EcommerceStore);
 }
