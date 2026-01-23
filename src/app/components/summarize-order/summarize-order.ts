@@ -29,14 +29,28 @@ import { EcommerceStore } from '../../stores/ecommerce-store';
 export class SummarizeOrder {
   store = inject(EcommerceStore);
 
-  subtotal = computed(() =>
-    this.store
+  private toFixedNumber(value: number, decimals: number): number {
+    const factor = Math.pow(10, decimals);
+    return Math.floor(value * factor) / factor;
+  }
+
+  subtotal = computed(() => {
+    const value = this.store
       .cartItems()
-      .reduce((acc, item) => acc + item.product.price * item.quantity, 0)
-      .toFixed(2)
-  );
+      .reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+    return this.toFixedNumber(value, 2).toFixed(2);
+  });
 
-  tax = computed(() => (Number(this.subtotal()) * 0.05).toFixed(2));
+  tax = computed(() => {
+    const subtotal = Number(this.subtotal());
+    const taxValue = this.toFixedNumber(subtotal * 0.05, 2);
+    return taxValue.toFixed(2);
+  });
 
-  total = computed(() => (Number(this.subtotal()) + Number(this.tax())).toFixed(2));
+  total = computed(() => {
+    const subtotal = Number(this.subtotal());
+    const tax = Number(this.tax());
+    const totalValue = this.toFixedNumber(subtotal + tax, 2);
+    return totalValue.toFixed(2);
+  });
 }
